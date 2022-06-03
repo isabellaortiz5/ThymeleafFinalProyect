@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>product categories</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+	integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+	crossorigin="anonymous">
+<link rel="stylesheet" href="../css/shards.min.css">
+</head>
+<body>
+	<div th:switch="${productcategories}" class="container my-5">
+		<div class="row">
+			<div class="col-md-10">
+				<div th:case="null">
+					<h2>No Product Categories, Add a new one</h2>
+				</div>
+				<div th:case="*">
+					<h2 class="my-5">Product Categories index</h2>
+					<table class="table table-striped table-responsive-md">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Modified Date</th>
+								<th>Name</th>
+								<th>Rowgu Id</th>
+								<th>Search</th>
+								<th>Edit</th>
+								<th>Delete</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="p : ${productcategories}">
+								<td class="text-info" th:text="${p.productcategoryid}"></td>
+								<td class="text-info" th:text="${p.modifieddate}"></td>
+								<td class="text-info" th:text="${p.name}"></td>
+								<td class="text-info" th:text="${p.rowguid}"></td>
+
+								<td><a
+									th:href="@{/prod-categ/{id}(id=${p.productcategoryid})}"
+									class="btn btn-primary"><i
+										class="fas fa-search ml-2"></i></a></td>
+								<td><a
+									th:href="@{edit/{id}(id=${p.productcategoryid})}"
+									class="btn btn-primary"><i
+										class="fas fa-user-edit ml-2"></i></a></td>
+								<td><a
+								
+									th:href="@{/prod-categ/delete/{id}(id=${p.productcategoryid})}"
+									class="btn btn-primary"><i
+										class="fas fa-user-times ml-2"></i>
+										</a></td>
+							</tr>
+								
+						</tbody>
+					</table>
+				</div>
+				<p class="my-7">
+					<a href="/prod-categ/add" class="btn btn-primary"><i class="fas fa-user-plus ml-2"></i></a>
+				</p>
+			</div>
+		</div>
+		<a href="/"><i class="fas fa-home ml-2"></i>Go back to main menu</a>
+	</div>
+</body>
+</html>

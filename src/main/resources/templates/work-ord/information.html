@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Work Order</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+	integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+	crossorigin="anonymous">
+<link rel="stylesheet" href="../css/shards.min.css">
+</head>
+<body>
+<div class="container my-5">
+    <h2>Work Order Info</h2>
+    <div>
+        <h5>Id</h5>
+        <p th:text="${workorder.workorderid}"></p>
+    </div>
+   <div>
+        <h5>End date</h5>
+        <p th:text="${workorder.enddate}"></p>
+    </div>
+    <div>
+        <h5>Modified date</h5>
+        <p th:text="${workorder.modifieddate}"></p>
+    </div>
+    <div>
+        <h5>Order qty</h5>
+        <p th:text="${workorder.orderqty}"></p>
+    </div>
+    <div>
+        <h5>Scrapped qty</h5>
+        <p th:text="${workorder.scrappedqty}"></p>
+    </div>
+    <div>
+        <h5>Scrap reason</h5>
+        <p th:text="${workorder.scrapreason.name}"></p>
+    </div>
+    <div>
+        <h5>Start date</h5>
+        <p th:text="${workorder.startdate}"></p>
+    </div>
+    <div>
+        <h5>Product</h5>
+        <p th:text="${workorder.product.name}"></p>
+    </div>
+    
+    <p>
+        <a th:href="@{/work-ord/edit/{id}(id=${workorder.workorderid})}" class="btn btn-primary">Edit</a>
+    </p>
+    <form>
+        <input type="button" value="Go back" onclick="history.back()" class="btn btn-primary">
+    </form>
+</div>
+</body>
+</html>
