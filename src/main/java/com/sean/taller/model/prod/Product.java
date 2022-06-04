@@ -18,6 +18,8 @@ import javax.persistence.SequenceGenerator;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * The persistent class for the product database table.
  *
@@ -91,16 +93,19 @@ public class Product implements Serializable {
 	private Productmodel productmodel;
 
 	// bi-directional many-to-one association to Productsubcategory
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "productsubcategoryid")
 	private Productsubcategory productsubcategory;
 
 	// bi-directional many-to-one association to Unitmeasure
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "sizeunitmeasurecode")
 	private Unitmeasure unitmeasure1;
 
 	// bi-directional many-to-one association to Unitmeasure
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "weightunitmeasurecode")
 	private Unitmeasure unitmeasure2;

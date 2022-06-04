@@ -14,7 +14,7 @@ import com.sean.taller.model.prod.Workorder;
 import com.sean.taller.services.intfcs.WorkorderService;
 
 @RestController
-@RequestMapping("worker-order")
+@RequestMapping("/api/work-ord")
 public class WorkOrderBackController implements com.sean.taller.backcontroller.intfcs.WorkOrderBackController {
 
 	@Autowired

@@ -11,10 +11,18 @@ import com.sean.taller.model.prod.Workorder;
 
 @Component
 public class WorkOrderDelegateImp implements WorkOrderDelegate {
-	private final static String URL = "http://localhost:8080/work-order/";
+	private final static String URL = "http://localhost:8080/api/work-ord/";
 
 	private RestTemplate rt;
+	
+	public WorkOrderDelegateImp() {
+		this.rt = new RestTemplate();
+	}
 
+	public RestTemplate getRestTemplate() {
+		return rt;
+	}
+	
 	@Override
 	public Workorder save(Workorder w) {
 		return rt.postForObject(URL, w, Workorder.class);
