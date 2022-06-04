@@ -12,10 +12,18 @@ import com.sean.taller.model.prod.Productcategory;
 @Component
 public class ProductCategoryDelegateImp implements ProductCategoryDelegate {
 
-	private final static String URL = "http://localhost:8080/product-category/";
+	private final static String URL = "http://localhost:8080/api/product-category/";
 
 	private RestTemplate rt;
 
+	public ProductCategoryDelegateImp() {
+		this.rt = new RestTemplate();	
+		}
+
+	public RestTemplate getRestTemplate() {
+		return rt;
+	}
+	
 	@Override
 	public Productcategory save(Productcategory p) {
 		return rt.postForObject(URL, p, Productcategory.class);

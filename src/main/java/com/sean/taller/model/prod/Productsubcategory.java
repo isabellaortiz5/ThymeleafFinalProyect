@@ -16,6 +16,8 @@ import javax.persistence.SequenceGenerator;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * The persistent class for the productsubcategory database table.
  *
@@ -43,6 +45,7 @@ public class Productsubcategory implements Serializable {
 
 	// bi-directional many-to-one association to Productcategory
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "productcategoryid")
 	private Productcategory productcategory;
 

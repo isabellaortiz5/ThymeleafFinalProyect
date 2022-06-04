@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.sean.taller.businessdelegate.intfcs.ProductCategoryDelegate;
 import com.sean.taller.model.prod.Productcategory;
 import com.sean.taller.services.intfcs.ProductcategoryService;
 
@@ -20,18 +21,18 @@ import com.sean.taller.services.intfcs.ProductcategoryService;
 public class ProductCategoryController {
 	
 	@Autowired
-	private ProductcategoryService pcs;
+	private ProductCategoryDelegate pcd;
 	
 	@Autowired
-	public ProductCategoryController(ProductcategoryService pcs) {
-		this.pcs = pcs;
+	public ProductCategoryController(ProductCategoryDelegate pcd) {
+		this.pcd = pcd;
 
 	}
 
 	@GetMapping("")
 	public String index(Model model) {
 		
-		Iterable<Productcategory> pcss = pcs.findAll();
+		Iterable<Productcategory> pcss = pcd.findAll();
 		
 		if(pcss.iterator().hasNext()){
 			model.addAttribute("productcategories",pcss);
@@ -43,7 +44,7 @@ public class ProductCategoryController {
 	
 	@GetMapping("/edit/{id}")
 	public String editProductCategory(Model model, @PathVariable("id") Integer id) {
-		Productcategory pc = pcs.findById(id);
+		Productcategory pc = pcd.findById(id);
 		if (pc == null)
 			throw new IllegalArgumentException("Invalid Prosuct categ Id:" + id);
 		
@@ -54,7 +55,7 @@ public class ProductCategoryController {
 
 	@PostMapping("/edit/{id}")
 	public String postEditProductCategory(Model model, @ModelAttribute Productcategory pc) {
-		pcs.edit(pc);
+		pcd.update(pc);
 		return "redirect:/prod-categ";
 	}
 	
@@ -70,7 +71,7 @@ public class ProductCategoryController {
 			model.addAttribute("productcategory", new Productcategory());
 	        return "prod-categ/add";
 	    } else {
-	    	pcs.save(pc);
+	    	pcd.save(pc);
 	    	return "redirect:/prod-categ";
 	    }
 		
@@ -78,12 +79,12 @@ public class ProductCategoryController {
 	
 	@GetMapping("/delete/{id}")
 	public String deleteProductCategory(Model model,  @PathVariable Integer id) {
-		pcs.delete(id);
+		pcd.delete(id);
 		return "redirect:/prod-categ";
 	}
 	@GetMapping("/{id}")
 	public String getProductCategory(Model model, @PathVariable Integer id) {
-		Productcategory pc = pcs.findById(id);
+		Productcategory pc = pcd.findById(id);
 		model.addAttribute("productcategory", pc);
 		return "prod-categ/information";
 	}
