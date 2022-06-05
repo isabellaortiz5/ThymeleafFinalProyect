@@ -1,6 +1,7 @@
 package com.sean.taller.model.prod;
 
 import java.io.Serializable;
+
 import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.Entity;
@@ -11,7 +12,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.Size;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -37,6 +38,7 @@ public class Productcategory implements Serializable {
 	private Integer rowguid;
 
 	// bi-directional many-to-one association to Productsubcategory
+	@JsonIgnore
 	@OneToMany(mappedBy = "productcategory")
 	private List<Productsubcategory> productsubcategories;
 

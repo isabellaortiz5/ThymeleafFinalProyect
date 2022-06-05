@@ -12,6 +12,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * The persistent class for the scrapreason database table.
  *
@@ -31,6 +33,7 @@ public class Scrapreason implements Serializable {
 	private String name;
 
 	// bi-directional many-to-one association to Workorder
+	@JsonIgnore
 	@OneToMany(mappedBy = "scrapreason")
 	private List<Workorder> workorders;
 

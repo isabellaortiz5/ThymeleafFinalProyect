@@ -57,7 +57,7 @@ public class Application {
 		LocalDate date = LocalDate.now();    
 		pc1.setModifieddate(date);
 		pc1.setRowguid(1);
-		pcs.save(pc1);
+		Productcategory savedCateg = pcs.save(pc1);
 		
 		ProductsubcategoryService pscs = c.getBean(ProductsubcategoryService.class);
 		Productsubcategory psc1 = new Productsubcategory();
@@ -65,7 +65,7 @@ public class Application {
 		date = LocalDate.now();    
 		psc1.setModifieddate(date);
 		psc1.setRowguid(1);
-		psc1.setProductcategory(pc1);
+		psc1.setProductcategory(pcs.findById(savedCateg.getProductcategoryid()));
 		pscs.save(psc1);
 		
 		UnitmeasureService ums =  c.getBean(UnitmeasureService.class);

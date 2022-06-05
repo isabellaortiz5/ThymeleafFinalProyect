@@ -8,18 +8,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sean.taller.backcontroller.intfcs.ProductSubCategoryBackController;
+import com.sean.taller.dao.intfcs.ProductSubCategoryDao;
 import com.sean.taller.model.prod.Productsubcategory;
 import com.sean.taller.services.intfcs.ProductsubcategoryService;
 
 @RestController
-@RequestMapping("/product-sub-category")
+@RequestMapping("/api/product-sub-category")
 public class ProductSubCategoryBackControllerImp implements ProductSubCategoryBackController {
 
 	@Autowired
-	private ProductsubcategoryService ps;
+	private ProductSubCategoryDao ps;
+	
+	public ProductSubCategoryBackControllerImp(ProductSubCategoryDao ps) {
+		this.ps = ps;
+	}
 	
 	@Override
 	@PostMapping("/")
@@ -30,7 +36,7 @@ public class ProductSubCategoryBackControllerImp implements ProductSubCategoryBa
 	@Override
 	@PutMapping("/{id}")
 	public Productsubcategory update(@PathVariable("id") Integer id, @RequestBody Productsubcategory psc) {
-		return ps.edit(psc);
+		return ps.update(psc);
 	}
 
 	@Override
@@ -46,8 +52,10 @@ public class ProductSubCategoryBackControllerImp implements ProductSubCategoryBa
 	}
 
 	@Override
-	@GetMapping("/")
+	@GetMapping
 	public Iterable<Productsubcategory> findAll() {
+		Productsubcategory a = ps.findById(1);
+		System.out.println("ON REST CONTROLLER-DAO: " + a.getProductcategory());
 		return ps.findAll();
 	}
 

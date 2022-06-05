@@ -93,19 +93,17 @@ public class Product implements Serializable {
 	private Productmodel productmodel;
 
 	// bi-directional many-to-one association to Productsubcategory
-	@JsonIgnore
+	
 	@ManyToOne
 	@JoinColumn(name = "productsubcategoryid")
 	private Productsubcategory productsubcategory;
 
 	// bi-directional many-to-one association to Unitmeasure
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "sizeunitmeasurecode")
 	private Unitmeasure unitmeasure1;
 
 	// bi-directional many-to-one association to Unitmeasure
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "weightunitmeasurecode")
 	private Unitmeasure unitmeasure2;
@@ -139,6 +137,7 @@ public class Product implements Serializable {
 	private List<Transactionhistory> transactionhistories;
 
 	// bi-directional many-to-one association to Workorder
+	@JsonIgnore
 	@OneToMany(mappedBy = "product")
 	private List<Workorder> workorders;
 

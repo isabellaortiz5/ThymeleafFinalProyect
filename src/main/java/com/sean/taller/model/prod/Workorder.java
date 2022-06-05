@@ -42,13 +42,11 @@ public class Workorder implements Serializable {
 	private LocalDate startdate;
 
 	//bi-directional many-to-one association to Product
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="productid")
 	private Product product;
 
 	//bi-directional many-to-one association to Scrapreason
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="scrapreasonid")
 	private Scrapreason scrapreason;

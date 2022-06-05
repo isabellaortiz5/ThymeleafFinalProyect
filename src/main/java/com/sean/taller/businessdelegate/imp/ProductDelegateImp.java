@@ -11,10 +11,18 @@ import com.sean.taller.model.prod.Product;
 
 @Component
 public class ProductDelegateImp implements ProductDelegate {
-	private final static String URL = "http://localhost:8080/product/";
+	private final static String URL = "http://localhost:8080/api/prod/";
 
 	private RestTemplate rt;
 
+	public ProductDelegateImp() {
+		this.rt = new RestTemplate();	
+		}
+
+	public RestTemplate getRestTemplate() {
+		return rt;
+	}
+	
 	@Override
 	public Product save(Product p) {
 		return rt.postForObject(URL, p, Product.class);

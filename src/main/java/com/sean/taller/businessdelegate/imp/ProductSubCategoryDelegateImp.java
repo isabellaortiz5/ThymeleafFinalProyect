@@ -1,8 +1,13 @@
 package com.sean.taller.businessdelegate.imp;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -12,9 +17,22 @@ import com.sean.taller.model.prod.Productsubcategory;
 @Component
 public class ProductSubCategoryDelegateImp implements ProductSubCategoryDelegate{
 
-	private final static String URL = "http://localhost:8080/product-sub-category/";
+	private final static String URL = "http://localhost:8080/api/product-sub-category/";
 
 	private RestTemplate rt;
+	
+	public ProductSubCategoryDelegateImp() {
+		this.rt = new RestTemplate();	
+		List<HttpMessageConverter<?>> msgConverters = new ArrayList<>();
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		converter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON));
+		msgConverters.add(converter);
+		this.rt.setMessageConverters(msgConverters);
+	}
+
+	public RestTemplate getRestTemplate() {
+		return rt;
+	}
 
 	@Override
 	public Productsubcategory save(Productsubcategory p) {
@@ -37,7 +55,9 @@ public class ProductSubCategoryDelegateImp implements ProductSubCategoryDelegate
 	}
 
 	@Override
-	public List<Productsubcategory> findAll() {
-		return Arrays.asList(rt.getForObject(URL, Productsubcategory[].class));
+	public Iterable<Productsubcategory> findAll() {
+		Productsubcategory[] subcategs = rt.getForObject(URL, Productsubcategory[].class);
+		System.out.println("ON DELEGATE LIST: " + subcategs[0].getProductcategory());
+		return Arrays.asList(subcategs);
 	}
 }

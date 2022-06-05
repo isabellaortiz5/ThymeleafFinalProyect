@@ -1,10 +1,7 @@
 package com.sean.taller.frontcontroller;
 
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,58 +10,60 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import com.sean.taller.businessdelegate.intfcs.ProductCategoryDelegate;
+import com.sean.taller.businessdelegate.intfcs.ProductSubCategoryDelegate;
 import com.sean.taller.model.prod.Productcategory;
 import com.sean.taller.model.prod.Productsubcategory;
 import com.sean.taller.services.intfcs.ProductService;
-import com.sean.taller.services.intfcs.ProductcategoryService;
-import com.sean.taller.services.intfcs.ProductsubcategoryService;
 
 @Controller
 @RequestMapping("prod-sub-categ")
 public class ProductSubCategoryController {
 	@Autowired
-	private ProductsubcategoryService pscs;
+	private ProductSubCategoryDelegate pscd;
 	@Autowired
-	private ProductcategoryService pcs;
+	private ProductCategoryDelegate pcd;
 	
 	@Autowired
-	public ProductSubCategoryController(ProductsubcategoryService pscs, ProductcategoryService pcs,ProductService ps) {
-		this.pscs = pscs;
-		this.pcs = pcs;
+	public ProductSubCategoryController(ProductSubCategoryDelegate pscd, ProductCategoryDelegate pcd,ProductService ps) {
+		this.pscd = pscd;
+		this.pcd = pcd;
 	}
-
-	@GetMapping("")
+	
+	//@RequestMapping(value = "/categories", method = RequestMethod.GET)
+	@GetMapping
 	public String index(Model model) {
-		Iterable<Productsubcategory> psc = pscs.findAll();
+		Iterable<Productsubcategory> psc = pscd.findAll();
 		
 		if(psc.iterator().hasNext()){
+			Productsubcategory a = psc.iterator().next();
+			System.out.println("ON FRONT CONTROLLER - DELEGATE: " + a.getProductcategory());
 			model.addAttribute("productsubcategs", psc);
 		}
-		return "/prod-sub-categ/index";
+		return "prod-sub-categ/index";
 	}
 	
 	
 	@GetMapping("/edit/{id}")
 	public String editProductvendor(Model model, @PathVariable("id") Integer id) {
-		Productsubcategory psc = pscs.findById(id);
+		Productsubcategory psc = pscd.findById(id);
 		if (psc == null)
 			throw new IllegalArgumentException("Invalid Product categ Id:" + id);
 		
 		model.addAttribute("productsubcateg", psc);
-		model.addAttribute("productcategs", pcs.findAll());
+		model.addAttribute("productcategs", pcd.findAll());
 		return "prod-sub-categ/edit";
 	}
 
 	@PostMapping("/edit/{id}")
 	public String postEditProduct(Model model, @ModelAttribute Productsubcategory psc) {
-		pscs.edit(psc);
+		pscd.update(psc);
 		return "redirect:/prod-sub-categ";
 	}
 	@GetMapping("/add")
 	public String addProductvendor(Model model) {
 		model.addAttribute("productsubcateg", new Productsubcategory());
-		model.addAttribute("productcategs", pcs.findAll());
+		model.addAttribute("productcategs", pcd.findAll());
 		return "prod-sub-categ/add";
 	}
 
@@ -74,7 +73,7 @@ public class ProductSubCategoryController {
 			model.addAttribute("productsubcateg", new Productcategory());
 	        return "prod-sub-categ/add";
 	    } else {
-	    	pscs.save(psc);
+	    	pscd.save(psc);
 	    	return "redirect:/prod-sub-categ";
 	    }
 		
@@ -83,12 +82,12 @@ public class ProductSubCategoryController {
 	
 	@GetMapping("/delete/{id}")
 	public String deleteProductvendor(Model model, @PathVariable Integer id) {
-		pscs.delete(id);
+		pscd.delete(id);
 		return "redirect:/prod-sub-categ";
 	}
 	@GetMapping("/{id}")
 	public String getProductvendor(Model model,@PathVariable("id") Integer id) {
-		Productsubcategory psc = pscs.findById(id);
+		Productsubcategory psc = pscd.findById(id);
 		model.addAttribute("productsubcateg", psc);
 		return "prod-sub-categ/information";
 	}

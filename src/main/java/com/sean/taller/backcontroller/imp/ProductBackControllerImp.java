@@ -15,7 +15,7 @@ import com.sean.taller.model.prod.Product;
 import com.sean.taller.services.intfcs.ProductService;
 
 @RestController
-@RequestMapping("product")
+@RequestMapping("/api/prod")
 public class ProductBackControllerImp implements ProductBackController {
 
 	@Autowired
