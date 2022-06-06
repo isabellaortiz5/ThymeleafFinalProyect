@@ -16,13 +16,17 @@ public class ProductCategoryDelegateImp implements ProductCategoryDelegate {
 
 	private RestTemplate rt;
 
+	public RestTemplate getRt() {
+		return rt;
+	}
+
+	public void setRt(RestTemplate rt) {
+		this.rt = rt;
+	}
+
 	public ProductCategoryDelegateImp() {
 		this.rt = new RestTemplate();	
 		}
-
-	public RestTemplate getRestTemplate() {
-		return rt;
-	}
 	
 	@Override
 	public Productcategory save(Productcategory p) {
