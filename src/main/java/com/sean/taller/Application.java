@@ -1,6 +1,7 @@
 package com.sean.taller;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDate;
 
 import org.springframework.boot.SpringApplication;
@@ -10,6 +11,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 
+import com.sean.taller.model.hr.Department;
+import com.sean.taller.model.hr.Employee;
+import com.sean.taller.model.hr.Employeedepartmenthistory;
 import com.sean.taller.model.prod.Product;
 import com.sean.taller.model.prod.Productcategory;
 import com.sean.taller.model.prod.Productsubcategory;
@@ -17,6 +21,9 @@ import com.sean.taller.model.prod.Scrapreason;
 import com.sean.taller.model.prod.Unitmeasure;
 import com.sean.taller.model.prod.Workorder;
 import com.sean.taller.services.imp.UserServiceImp;
+import com.sean.taller.services.intfcs.DepartmentService;
+import com.sean.taller.services.intfcs.EmployeeDepartmentHistoryService;
+import com.sean.taller.services.intfcs.EmployeeService;
 import com.sean.taller.services.intfcs.ProductService;
 import com.sean.taller.services.intfcs.ProductcategoryService;
 import com.sean.taller.services.intfcs.ProductsubcategoryService;
@@ -106,6 +113,36 @@ public class Application {
 		w1.setScrapreason(s1);
 		w1.setStartdate(LocalDate.of(2022, 05, 1));
 		wo.add(w1);
+		
+		// ENTIDADES TALLER FINAL 
+		
+		DepartmentService ds = c.getBean(DepartmentService.class);
+		Department d = new Department();
+		d.setGroupname("group1");
+		d.setName("Human resources");
+		d.setModifieddate(LocalDate.now());
+		ds.save(d);
+		
+		EmployeeService es =  c.getBean(EmployeeService.class);
+		
+		Employee e1 = new Employee();
+		e1.setJobtitle("Doctor");
+		es.save(e1);
+		Employee e2 = new Employee();
+		e2.setJobtitle("Pedriatitian");
+		e2.setBusinessentityid(1);
+		es.save(e2);
+		
+		EmployeeDepartmentHistoryService emdhs = c.getBean(EmployeeDepartmentHistoryService.class);
+		
+		Employeedepartmenthistory edh = new Employeedepartmenthistory();
+		edh.setEmployee(es.findAll().iterator().next());
+		edh.setDepartment(d);
+		edh.setModifieddate(LocalDate.now());
+		edh.setEnddate(Date.valueOf(LocalDate.now()));
+		Employeedepartmenthistory a  = emdhs.save(edh);
+		Employeedepartmenthistory e = emdhs.findById(a.getId());
+		System.out.println("IDS" + e.getDepartment().getDepartmentid()  + e.getEmployee().getBusinessentityid());
 	}
 	
 	@Bean

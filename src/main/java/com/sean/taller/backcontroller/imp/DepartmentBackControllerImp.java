@@ -15,7 +15,7 @@ import com.sean.taller.model.hr.Department;
 import com.sean.taller.services.intfcs.DepartmentService;
 
 @RestController
-@RequestMapping("/department")
+@RequestMapping("/api/department")
 public class DepartmentBackControllerImp implements DepartmentBackController {
 
 	@Autowired

@@ -15,7 +15,7 @@ import com.sean.taller.model.hr.Employeedepartmenthistory;
 import com.sean.taller.services.intfcs.EmployeeDepartmentHistoryService;
 
 @RestController
-@RequestMapping("/employee-department-history")
+@RequestMapping("/api/employee-department-history")
 public class EmployeeDepartmentHistoryBackControllerImp implements EmployeeDepartmentHistoryBackController {
 
 	@Autowired

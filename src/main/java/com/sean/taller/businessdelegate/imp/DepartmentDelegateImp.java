@@ -11,10 +11,13 @@ import com.sean.taller.model.hr.Department;
 
 @Component
 public class DepartmentDelegateImp implements DepartmentDelegate{
-	private final static String URL = "http://localhost:8080/department/";
+	private final static String URL = "http://localhost:8080/api/department/";
 
 	private RestTemplate rt;
-
+	
+	public DepartmentDelegateImp() {
+		this.rt = new RestTemplate();	
+	}
 	@Override
 	public Department save(Department d) {
 		return rt.postForObject(URL, d, Department.class);

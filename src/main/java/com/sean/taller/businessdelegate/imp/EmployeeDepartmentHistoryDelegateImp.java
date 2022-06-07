@@ -11,10 +11,14 @@ import com.sean.taller.model.hr.Employeedepartmenthistory;
 
 @Component
 public class EmployeeDepartmentHistoryDelegateImp implements EmployeeDepartmentHistoryDelegate {
-	private final static String URL = "http://localhost:8080/employee-department-history/";
+	private final static String URL = "http://localhost:8080/api/employee-department-history/";
 
 	private RestTemplate rt;
-
+	
+	public EmployeeDepartmentHistoryDelegateImp() {
+		this.rt = new RestTemplate();	
+	}
+	
 	@Override
 	public Employeedepartmenthistory save(Employeedepartmenthistory e) {
 		return rt.postForObject(URL, e, Employeedepartmenthistory.class);

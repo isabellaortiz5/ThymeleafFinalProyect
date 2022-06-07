@@ -1,7 +1,7 @@
 package com.sean.taller.model.hr;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -14,6 +14,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * The persistent class for the employeedepartmenthistory database table.
@@ -32,16 +34,17 @@ public class Employeedepartmenthistory implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date enddate;
 
-	private Timestamp modifieddate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate modifieddate;
 
 	// bi-directional many-to-one association to Department
 	@ManyToOne
-	@JoinColumn(name = "departmentid", insertable = false, updatable = false)
+	@JoinColumn(name = "departmentid")
 	private Department department;
 
 	// bi-directional many-to-one association to Employee
 	@ManyToOne
-	@JoinColumn(name = "businessentityid", insertable = false, updatable = false)
+	@JoinColumn(name = "businessentityid")
 	private Employee employee;
 
 	// bi-directional many-to-one association to Shift
@@ -68,7 +71,7 @@ public class Employeedepartmenthistory implements Serializable {
 		return this.id;
 	}
 
-	public Timestamp getModifieddate() {
+	public LocalDate getModifieddate() {
 		return this.modifieddate;
 	}
 
@@ -92,7 +95,7 @@ public class Employeedepartmenthistory implements Serializable {
 		this.id = id;
 	}
 
-	public void setModifieddate(Timestamp modifieddate) {
+	public void setModifieddate(LocalDate modifieddate) {
 		this.modifieddate = modifieddate;
 	}
 
