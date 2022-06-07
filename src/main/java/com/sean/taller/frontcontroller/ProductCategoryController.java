@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.sean.taller.businessdelegate.intfcs.ProductCategoryDelegate;
 import com.sean.taller.model.prod.Productcategory;
-import com.sean.taller.services.intfcs.ProductcategoryService;
 
 @Controller
 @RequestMapping("prod-categ")

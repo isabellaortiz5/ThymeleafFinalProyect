@@ -127,22 +127,21 @@ public class Application {
 		
 		Employee e1 = new Employee();
 		e1.setJobtitle("Doctor");
+		e1.setBusinessentityid(1);
 		es.save(e1);
 		Employee e2 = new Employee();
 		e2.setJobtitle("Pedriatitian");
-		e2.setBusinessentityid(1);
+		e2.setBusinessentityid(2);
 		es.save(e2);
 		
 		EmployeeDepartmentHistoryService emdhs = c.getBean(EmployeeDepartmentHistoryService.class);
 		
 		Employeedepartmenthistory edh = new Employeedepartmenthistory();
-		edh.setEmployee(es.findAll().iterator().next());
+		edh.setEmployee(e2);
 		edh.setDepartment(d);
 		edh.setModifieddate(LocalDate.now());
 		edh.setEnddate(Date.valueOf(LocalDate.now()));
-		Employeedepartmenthistory a  = emdhs.save(edh);
-		Employeedepartmenthistory e = emdhs.findById(a.getId());
-		System.out.println("IDS" + e.getDepartment().getDepartmentid()  + e.getEmployee().getBusinessentityid());
+		emdhs.save(edh);
 	}
 	
 	@Bean

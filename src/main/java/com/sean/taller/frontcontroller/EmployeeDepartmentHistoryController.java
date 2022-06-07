@@ -18,19 +18,20 @@ import com.sean.taller.businessdelegate.intfcs.DepartmentDelegate;
 import com.sean.taller.businessdelegate.intfcs.EmployeeDepartmentHistoryDelegate;
 import com.sean.taller.model.hr.Department;
 import com.sean.taller.model.hr.Employeedepartmenthistory;
+import com.sean.taller.services.imp.EmployeeServiceImp;
 
 @Controller
 @RequestMapping("emp-dept-hist")
 public class EmployeeDepartmentHistoryController {
-	@Autowired
 	private DepartmentDelegate dd;
-	@Autowired
 	private EmployeeDepartmentHistoryDelegate edhd;
+	private EmployeeServiceImp esi;
 	
 	@Autowired
-	public EmployeeDepartmentHistoryController(DepartmentDelegate dd, EmployeeDepartmentHistoryDelegate edhd) {
+	public EmployeeDepartmentHistoryController(DepartmentDelegate dd, EmployeeDepartmentHistoryDelegate edhd, EmployeeServiceImp esi) {
 		this.dd = dd;
 		this.edhd = edhd;
+		this.esi = esi;
 	}
 	
 	@GetMapping
@@ -63,18 +64,23 @@ public class EmployeeDepartmentHistoryController {
 	
 	@GetMapping("/add")
 	public String addEmployeedepartmenthistory(Model model) {
-		model.addAttribute("empDeptHists", new Employeedepartmenthistory());
-		model.addAttribute("department", dd.findAll());
+		model.addAttribute("Employeedepartmenthistory", new Employeedepartmenthistory());
+		model.addAttribute("departments", dd.findAll());
+		model.addAttribute("employees", esi.findAll());
 		return "emp-dept-hist/add";
 	}
 
 	@PostMapping("/add")
 	public String addEmployeedepartmenthistoryPost(Model model, @Valid @ModelAttribute Employeedepartmenthistory edh, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {       
-			model.addAttribute("empDeptHists", new Employeedepartmenthistory());
+		if (bindingResult.hasErrors()) {    
+			System.out.println("EDH emp POST MAPPING: " + edh.getEmployee());
+			model.addAttribute("Employeedepartmenthistory", new Employeedepartmenthistory());
+			model.addAttribute("departments", dd.findAll());
+			model.addAttribute("employees", esi.findAll());
 	        return "emp-dept-hist/add";
 	    } else {	
-	    	edhd.save(edh);
+	    	
+			edhd.save(edh);
 	    	return "redirect:/emp-dept-hist";
 	    }
 		
