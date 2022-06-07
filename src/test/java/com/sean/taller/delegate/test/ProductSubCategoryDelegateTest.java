@@ -12,22 +12,28 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.sean.taller.Application;
 import com.sean.taller.businessdelegate.intfcs.ProductSubCategoryDelegate;
-import com.sean.taller.model.prod.Productcategory;
+import com.sean.taller.businessdelegate.intfcs.ProductSubCategoryDelegate;
+import com.sean.taller.model.prod.Productsubcategory;
 import com.sean.taller.model.prod.Productsubcategory;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@ContextConfiguration(classes = Application.class)
 class ProductSubCategoryDelegateTest {
+	private final static String URL = "http://localhost:8080/api/product-sub-category/";
 	
 	@Autowired
-    private ProductSubCategoryDelegate delegate;
+    private ProductSubCategoryDelegate pscd;
 
     private MockRestServiceServer server;
 
@@ -35,62 +41,111 @@ class ProductSubCategoryDelegateTest {
 
     @BeforeEach
     public void createServer() {
-//        server = MockRestServiceServer.createServer(delegate.getRestTemplate());
+        server = MockRestServiceServer.createServer(pscd.getRt());
 
     }
-	
-	@Test
-	void addProductSubCategory() {
-		Productcategory pc = new Productcategory();
-		pc.setName("CategTest");
-		LocalDate date = LocalDate.now();    
-		pc.setModifieddate(date);
-		pc.setRowguid(1);
-		
-		Productsubcategory psc = new Productsubcategory();
-		psc.setName("SubCategTest");
-		date = LocalDate.now();    
-		psc.setModifieddate(date);
-		psc.setRowguid(1);
-		psc.setProductcategory(pc);
-		
-		try {
+    
+    @Test
+    public void addProductSubCategoryTest() {
+        Productsubcategory psc = new Productsubcategory();
+
+        try {
             server.expect(ExpectedCount.once(),
-                    requestTo(new URI("http://localhost:8080")))
+                    requestTo(URL))
                     .andExpect(method(HttpMethod.POST))
                     .andRespond(withSuccess(mapper.writeValueAsString(psc), MediaType.APPLICATION_JSON));
-        } catch (URISyntaxException | JsonProcessingException e) {
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
             fail();
         }
-		
-		Productsubcategory savedPsc = delegate.save(psc);
 
-        assertNotNull(savedPsc);
-        assertEquals(psc.getProductsubcategoryid(), savedPsc.getProductsubcategoryid());
+        Productsubcategory result = pscd.save(psc);
+
+        assertNotNull(result);
+        assertEquals(psc.getProductsubcategoryid(), result.getProductsubcategoryid());
+
+        server.verify();
+    }
+    
+
+	@Test
+	void updateProductSubCategoryTest() {
+		Productsubcategory psc = new Productsubcategory();
+        try {
+            server.expect(ExpectedCount.once(),
+            		requestTo(URL + psc.getProductsubcategoryid()))
+            .andExpect(method(HttpMethod.PUT))
+            .andRespond(withSuccess(mapper.writeValueAsString(psc), MediaType.APPLICATION_JSON));
+        }  catch (JsonProcessingException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        pscd.update(psc);
 
         server.verify();
 		
-		fail("Not yet implemented");
 	}
 	
 	@Test
-	void updateProductSubCategory() {
+	void deleteProductSubCategoryTest() {
+		Productsubcategory psc = new Productsubcategory();
+
+        try {
+            server.expect(ExpectedCount.once(),
+                    requestTo(URL))
+                    .andExpect(method(HttpMethod.POST))
+                    .andRespond(withSuccess(mapper.writeValueAsString(psc), MediaType.APPLICATION_JSON));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            fail();
+        }
+        pscd.save(psc);
+        server.reset();
+
+        try {
+            server.expect(ExpectedCount.once(),
+                    requestTo(URL + psc.getProductsubcategoryid()))
+                    .andExpect(method(HttpMethod.DELETE))
+                    .andRespond(withSuccess(mapper.writeValueAsString(psc), MediaType.APPLICATION_JSON));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        pscd.delete(psc.getProductsubcategoryid());
+
+        server.verify();
 		
 	}
 	
 	@Test
-	void deleteProductSubCategory() {
+	void findByIdProductSubCategoryTest() {	
 		
-	}
-	
-	@Test
-	void findByIdProductSubCategory() {
-		
+		Productsubcategory psc = new Productsubcategory();
+
+        try {
+            server.expect(ExpectedCount.once(),
+                    requestTo(URL + psc.getProductsubcategoryid()))
+                    .andExpect(method(HttpMethod.GET))
+                    .andRespond(withSuccess(mapper.writeValueAsString(psc), MediaType.APPLICATION_JSON));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        Productsubcategory response = pscd.findById(psc.getProductsubcategoryid());
+
+        assertNotNull(response);
+
+        assertEquals(psc.getProductsubcategoryid(), response.getProductsubcategoryid());
+
+        server.verify();
 	}
 	
 	@Test
 	void findAllProductSubCategory() {
 		
 	}
+
 }

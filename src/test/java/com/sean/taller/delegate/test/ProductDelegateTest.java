@@ -13,23 +13,26 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sean.taller.Application;
 import com.sean.taller.businessdelegate.intfcs.ProductDelegate;
 import com.sean.taller.model.prod.Product;
-import com.sean.taller.model.prod.Productcategory;
-import com.sean.taller.model.prod.Productsubcategory;
-import com.sean.taller.model.prod.Unitmeasure;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@ContextConfiguration(classes = Application.class)
 class ProductDelegateTest {
+	private final static String URL = "http://localhost:8080/api/prod/";
 	
 	@Autowired
-    private ProductDelegate delegate;
+    private ProductDelegate pd;
 
     private MockRestServiceServer server;
 
@@ -37,79 +40,105 @@ class ProductDelegateTest {
 
     @BeforeEach
     public void createServer() {
-//        server = MockRestServiceServer.createServer(delegate.getRestTemplate());
+        server = MockRestServiceServer.createServer(pd.getRt());
 
     }
-	
+    
     @Test
-	void addProduct() {
-    	Productcategory pc1 = new Productcategory();
-		pc1.setName("pctest");
-		LocalDate date = LocalDate.now();    
-		pc1.setModifieddate(date);
-		pc1.setRowguid(1);
-		
-    	Productsubcategory psc1 = new Productsubcategory();
-		psc1.setName("psctest");
-		date = LocalDate.now();    
-		psc1.setModifieddate(date);
-		psc1.setRowguid(1);
-		psc1.setProductcategory(pc1);
-		
-		Unitmeasure um1 = new Unitmeasure();
-		um1.setName("umtest");
-		Unitmeasure um2 = new Unitmeasure();
-		um2.setName("umtest");
-		
-    	Product p1 = new Product();
-		p1.setName("ptest");
-		p1.setProductnumber("1");
-		p1.setSellstartdate(LocalDate.of(2022, 05, 8));
-		p1.setSellenddate(LocalDate.of(2023, 01, 8));
-		p1.setProductsubcategory(psc1);
-		p1.setUnitmeasure1(um1);
-		p1.setUnitmeasure2(um2);
-		p1.setSize("S");
-		p1.setWeight(BigDecimal.valueOf(80));
-		
-		try {
+    public void addProductTest() {
+        Product p = new Product();
+
+        try {
             server.expect(ExpectedCount.once(),
-                    requestTo(new URI("http://localhost:8080")))
+                    requestTo(URL))
                     .andExpect(method(HttpMethod.POST))
-                    .andRespond(withSuccess(mapper.writeValueAsString(p1), MediaType.APPLICATION_JSON));
-        } catch (URISyntaxException | JsonProcessingException e) {
+                    .andRespond(withSuccess(mapper.writeValueAsString(p), MediaType.APPLICATION_JSON));
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
             fail();
         }
-		
-		Product savedP = delegate.save(p1);
 
-        assertNotNull(savedP);
-        assertEquals(p1.getProductid(), savedP.getProductid());
+        Product result = pd.save(p);
+
+        assertNotNull(result);
+        assertEquals(p.getProductid(), result.getProductid());
+
+        server.verify();
+    }
+    
+
+	@Test
+	void updateProductTest() {
+		Product p = new Product();
+        try {
+            server.expect(ExpectedCount.once(),
+            		requestTo(URL + p.getProductid()))
+            .andExpect(method(HttpMethod.PUT))
+            .andRespond(withSuccess(mapper.writeValueAsString(p), MediaType.APPLICATION_JSON));
+        }  catch (JsonProcessingException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        pd.update(p);
 
         server.verify();
 		
-		fail("Not yet implemented");
 	}
 	
 	@Test
-	void updateProduct() {
-		
-	}
-	
-	@Test
-	void deleteProduct() {
-		
-	}
-	
-	@Test
-	void findByIdProduct() {
-		
-	}
-	
-	@Test
-	void findAllProduct() {
-		
-	}
+	void deleteProductTest() {
+		Product p = new Product();
 
+        try {
+            server.expect(ExpectedCount.once(),
+                    requestTo(URL))
+                    .andExpect(method(HttpMethod.POST))
+                    .andRespond(withSuccess(mapper.writeValueAsString(p), MediaType.APPLICATION_JSON));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            fail();
+        }
+        pd.save(p);
+        server.reset();
+
+        try {
+            server.expect(ExpectedCount.once(),
+                    requestTo(URL + p.getProductid()))
+                    .andExpect(method(HttpMethod.DELETE))
+                    .andRespond(withSuccess(mapper.writeValueAsString(p), MediaType.APPLICATION_JSON));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        pd.delete(p.getProductid());
+
+        server.verify();
+		
+	}
+	
+	@Test
+	void findByIdProductTest() {	
+		
+		Product p = new Product();
+
+        try {
+            server.expect(ExpectedCount.once(),
+                    requestTo(URL + p.getProductid()))
+                    .andExpect(method(HttpMethod.GET))
+                    .andRespond(withSuccess(mapper.writeValueAsString(p), MediaType.APPLICATION_JSON));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        Product response = pd.findById(p.getProductid());
+
+        assertNotNull(response);
+
+        assertEquals(p.getProductid(), response.getProductid());
+
+        server.verify();
+	}
 }

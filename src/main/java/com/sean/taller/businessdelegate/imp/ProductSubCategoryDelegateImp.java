@@ -30,8 +30,12 @@ public class ProductSubCategoryDelegateImp implements ProductSubCategoryDelegate
 		this.rt.setMessageConverters(msgConverters);
 	}
 
-	public RestTemplate getRestTemplate() {
+	public RestTemplate getRt() {
 		return rt;
+	}
+
+	public void setRt(RestTemplate rt) {
+		this.rt = rt;
 	}
 
 	@Override

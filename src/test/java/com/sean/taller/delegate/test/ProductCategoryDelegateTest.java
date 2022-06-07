@@ -1,102 +1,139 @@
 package com.sean.taller.delegate.test;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.LocalDate;
-
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sean.taller.Application;
-import com.sean.taller.businessdelegate.imp.ProductCategoryDelegateImp;
 import com.sean.taller.businessdelegate.intfcs.ProductCategoryDelegate;
 import com.sean.taller.model.prod.Productcategory;
 
-import lombok.extern.log4j.Log4j2;
-
-@SpringBootTest
-@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ContextConfiguration(classes = Application.class)
-@DirtiesContext
 class ProductCategoryDelegateTest {
 	private final static String URL = "http://localhost:8080/api/product-category/";
 	
-	@Mock
-    private static RestTemplate restTemplate;
+	@Autowired
+    private ProductCategoryDelegate pcd;
 
-    @InjectMocks
-    private static ProductCategoryDelegate bd;
+    private MockRestServiceServer server;
 
+    private final ObjectMapper mapper = new ObjectMapper();
 
-    @BeforeAll
-    public static void setUp() {
-//        server = MockRestServiceServer.createServer(delegate.getRestTemplate());
-    	bd = new ProductCategoryDelegateImp();
-    	bd.setRt(restTemplate);
-    	
+    @BeforeEach
+    public void createServer() {
+        server = MockRestServiceServer.createServer(pcd.getRt());
+
     }
+    
     @Test
-	void addProductCategory() {
-		Productcategory pc = new Productcategory();
-		pc.setName("CategTest");
-		LocalDate date = LocalDate.now();    
-		pc.setModifieddate(date);
-		pc.setRowguid(1);
-		
-		try {
+    public void addProductCategoryTest() {
+        Productcategory pc = new Productcategory();
+
+        try {
             server.expect(ExpectedCount.once(),
-                    requestTo(new URI("http://localhost:8080")))
+                    requestTo(URL))
                     .andExpect(method(HttpMethod.POST))
                     .andRespond(withSuccess(mapper.writeValueAsString(pc), MediaType.APPLICATION_JSON));
-        } catch (URISyntaxException | JsonProcessingException e) {
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
             fail();
         }
-		
-		Productcategory savedPc = delegate.save(pc);
 
-        assertNotNull(savedPc);
-        assertEquals(pc.getProductcategoryid(), savedPc.getProductcategoryid());
+        Productcategory result = pcd.save(pc);
+
+        assertNotNull(result);
+        assertEquals(pc.getProductcategoryid(), result.getProductcategoryid());
+
+        server.verify();
+    }
+    
+
+	@Test
+	void updateProductCategoryTest() {
+		Productcategory pc = new Productcategory();
+        try {
+            server.expect(ExpectedCount.once(),
+            		requestTo(URL + pc.getProductcategoryid()))
+            .andExpect(method(HttpMethod.PUT))
+            .andRespond(withSuccess(mapper.writeValueAsString(pc), MediaType.APPLICATION_JSON));
+        }  catch (JsonProcessingException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        pcd.update(pc);
 
         server.verify();
 		
-		fail("Not yet implemented");
 	}
 	
 	@Test
-	void updateProductCategory() {
+	void deleteProductCategoryTest() {
+		Productcategory pc = new Productcategory();
+
+        try {
+            server.expect(ExpectedCount.once(),
+                    requestTo(URL))
+                    .andExpect(method(HttpMethod.POST))
+                    .andRespond(withSuccess(mapper.writeValueAsString(pc), MediaType.APPLICATION_JSON));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            fail();
+        }
+        pcd.save(pc);
+        server.reset();
+
+        try {
+            server.expect(ExpectedCount.once(),
+                    requestTo(URL + pc.getProductcategoryid()))
+                    .andExpect(method(HttpMethod.DELETE))
+                    .andRespond(withSuccess(mapper.writeValueAsString(pc), MediaType.APPLICATION_JSON));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        pcd.delete(pc.getProductcategoryid());
+
+        server.verify();
 		
 	}
 	
 	@Test
-	void deleteProductCategory() {
+	void findByIdProductCategoryTest() {	
 		
-	}
-	
-	@Test
-	void findByIdProductSubCategory() {
-		
+		Productcategory pc = new Productcategory();
+
+        try {
+            server.expect(ExpectedCount.once(),
+                    requestTo(URL + pc.getProductcategoryid()))
+                    .andExpect(method(HttpMethod.GET))
+                    .andRespond(withSuccess(mapper.writeValueAsString(pc), MediaType.APPLICATION_JSON));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        Productcategory response = pcd.findById(pc.getProductcategoryid());
+
+        assertNotNull(response);
+
+        assertEquals(pc.getProductcategoryid(), response.getProductcategoryid());
+
+        server.verify();
 	}
 	
 	@Test

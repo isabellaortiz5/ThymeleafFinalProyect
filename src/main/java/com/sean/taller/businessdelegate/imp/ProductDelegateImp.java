@@ -19,8 +19,12 @@ public class ProductDelegateImp implements ProductDelegate {
 		this.rt = new RestTemplate();	
 		}
 
-	public RestTemplate getRestTemplate() {
+	public RestTemplate getRt() {
 		return rt;
+	}
+	
+	public void setRt(RestTemplate rt) {
+		this.rt = rt;
 	}
 	
 	@Override

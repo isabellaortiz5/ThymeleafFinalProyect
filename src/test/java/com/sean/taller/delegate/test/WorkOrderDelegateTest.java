@@ -13,25 +13,26 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sean.taller.Application;
 import com.sean.taller.businessdelegate.intfcs.WorkOrderDelegate;
-import com.sean.taller.model.prod.Product;
-import com.sean.taller.model.prod.Productcategory;
-import com.sean.taller.model.prod.Productsubcategory;
-import com.sean.taller.model.prod.Scrapreason;
-import com.sean.taller.model.prod.Unitmeasure;
 import com.sean.taller.model.prod.Workorder;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@ContextConfiguration(classes = Application.class)
 class WorkOrderDelegateTest {
+	private final static String URL = "http://localhost:8080/api/work-ord/";
 	
 	@Autowired
-    private WorkOrderDelegate delegate;
+    private WorkOrderDelegate wod;
 
     private MockRestServiceServer server;
 
@@ -39,91 +40,110 @@ class WorkOrderDelegateTest {
 
     @BeforeEach
     public void createServer() {
-//        server = MockRestServiceServer.createServer(delegate.getRestTemplate());
+        server = MockRestServiceServer.createServer(wod.getRt());
 
     }
-	
+    
     @Test
-	void addWorkOrder() {
-    	Productcategory pc1 = new Productcategory();
-		pc1.setName("pctest");
-		LocalDate date = LocalDate.now();    
-		pc1.setModifieddate(date);
-		pc1.setRowguid(1);
-		
-    	Productsubcategory psc1 = new Productsubcategory();
-		psc1.setName("psctest");
-		date = LocalDate.now();    
-		psc1.setModifieddate(date);
-		psc1.setRowguid(1);
-		psc1.setProductcategory(pc1);
-		
-		Unitmeasure um1 = new Unitmeasure();
-		um1.setName("umtest");
-		Unitmeasure um2 = new Unitmeasure();
-		um2.setName("umtest");
-		
-    	Product p1 = new Product();
-		p1.setName("ptest");
-		p1.setProductnumber("1");
-		p1.setSellstartdate(LocalDate.of(2022, 05, 8));
-		p1.setSellenddate(LocalDate.of(2023, 01, 8));
-		p1.setProductsubcategory(psc1);
-		p1.setUnitmeasure1(um1);
-		p1.setUnitmeasure2(um2);
-		p1.setSize("S");
-		p1.setWeight(BigDecimal.valueOf(80));
-		
-		Scrapreason s1 = new Scrapreason();
-		s1.setName("stest");
-		
-		Workorder w1 = new Workorder();
-		w1.setDuedate(LocalDate.of(2022, 05, 8));
-		w1.setEnddate(LocalDate.of(2022, 05, 10));
-		w1.setModifieddate(LocalDate.of(2022, 05, 6));
-		w1.setOrderqty(5);
-		w1.setProduct(p1);
-		w1.setScrappedqty(12);
-		w1.setScrapreason(s1);
-		w1.setStartdate(LocalDate.of(2022, 05, 1));
-		
-		try {
+    public void addProductCategoryTest() {
+        Workorder wo = new Workorder();
+
+        try {
             server.expect(ExpectedCount.once(),
-                    requestTo(new URI("http://localhost:8080")))
+                    requestTo(URL))
                     .andExpect(method(HttpMethod.POST))
-                    .andRespond(withSuccess(mapper.writeValueAsString(w1), MediaType.APPLICATION_JSON));
-        } catch (URISyntaxException | JsonProcessingException e) {
+                    .andRespond(withSuccess(mapper.writeValueAsString(wo), MediaType.APPLICATION_JSON));
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
             fail();
         }
-		
-		Workorder savedW = delegate.save(w1);
 
-        assertNotNull(savedW);
-        assertEquals(w1.getWorkorderid(), savedW.getWorkorderid());
+        Workorder result = wod.save(wo);
+
+        assertNotNull(result);
+        assertEquals(wo.getWorkorderid(), result.getWorkorderid());
+
+        server.verify();
+    }
+    
+
+	@Test
+	void updateProductCategoryTest() {
+		Workorder wo = new Workorder();
+        try {
+            server.expect(ExpectedCount.once(),
+            		requestTo(URL + wo.getWorkorderid()))
+            .andExpect(method(HttpMethod.PUT))
+            .andRespond(withSuccess(mapper.writeValueAsString(wo), MediaType.APPLICATION_JSON));
+        }  catch (JsonProcessingException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        wod.update(wo);
 
         server.verify();
 		
-		fail("Not yet implemented");
 	}
 	
 	@Test
-	void updateWorkOrder() {
+	void deleteProductCategoryTest() {
+		Workorder wo = new Workorder();
+
+        try {
+            server.expect(ExpectedCount.once(),
+                    requestTo(URL))
+                    .andExpect(method(HttpMethod.POST))
+                    .andRespond(withSuccess(mapper.writeValueAsString(wo), MediaType.APPLICATION_JSON));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            fail();
+        }
+        wod.save(wo);
+        server.reset();
+
+        try {
+            server.expect(ExpectedCount.once(),
+                    requestTo(URL + wo.getWorkorderid()))
+                    .andExpect(method(HttpMethod.DELETE))
+                    .andRespond(withSuccess(mapper.writeValueAsString(wo), MediaType.APPLICATION_JSON));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        wod.delete(wo.getWorkorderid());
+
+        server.verify();
 		
 	}
 	
 	@Test
-	void deleteWorkOrder() {
+	void findByIdProductCategoryTest() {	
 		
+		Workorder wo = new Workorder();
+
+        try {
+            server.expect(ExpectedCount.once(),
+                    requestTo(URL + wo.getWorkorderid()))
+                    .andExpect(method(HttpMethod.GET))
+                    .andRespond(withSuccess(mapper.writeValueAsString(wo), MediaType.APPLICATION_JSON));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        Workorder response = wod.findById(wo.getWorkorderid());
+
+        assertNotNull(response);
+
+        assertEquals(wo.getWorkorderid(), response.getWorkorderid());
+
+        server.verify();
 	}
 	
 	@Test
-	void findByIdWorkOrder() {
-		
-	}
-	
-	@Test
-	void findAllWorkOrder() {
+	void findAllProductCategory() {
 		
 	}
 

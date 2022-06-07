@@ -19,8 +19,12 @@ public class WorkOrderDelegateImp implements WorkOrderDelegate {
 		this.rt = new RestTemplate();
 	}
 
-	public RestTemplate getRestTemplate() {
+	public RestTemplate getRt() {
 		return rt;
+	}
+
+	public void setRt(RestTemplate rt) {
+		this.rt = rt;
 	}
 	
 	@Override
