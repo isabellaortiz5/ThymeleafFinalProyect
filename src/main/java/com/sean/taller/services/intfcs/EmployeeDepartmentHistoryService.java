@@ -4,8 +4,7 @@ import com.sean.taller.model.hr.Employeedepartmenthistory;
 
 public interface EmployeeDepartmentHistoryService {
 
-
-	public Employeedepartmenthistory save(Employeedepartmenthistory e);
+	public Employeedepartmenthistory save(Employeedepartmenthistory e, Integer businessentityid);
 	
 	public Employeedepartmenthistory edit(Employeedepartmenthistory e);
 	

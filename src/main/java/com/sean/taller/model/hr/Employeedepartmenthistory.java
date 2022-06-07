@@ -1,6 +1,7 @@
 package com.sean.taller.model.hr;
 
 import java.io.Serializable;
+
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,7 +24,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @NamedQuery(name = "Employeedepartmenthistory.findAll", query = "SELECT e FROM Employeedepartmenthistory e")
 public class Employeedepartmenthistory implements Serializable {
 	private static final long serialVersionUID = 1L;
-
+	
 	@Id
 	@SequenceGenerator(name = "EMPLOYEEDEPARTMENTHISTORY_ID_GENERATOR", allocationSize = 1, sequenceName = "P_SEQ")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EMPLOYEEDEPARTMENTHISTORY_ID_GENERATOR")
@@ -48,6 +50,17 @@ public class Employeedepartmenthistory implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "shiftid", insertable = false, updatable = false)
 	private Shift shift;
+
+	@Transient
+	private Integer buisinessentityid;
+	
+	public Integer getBuisinessentityid() {
+		return buisinessentityid;
+	}
+
+	public void setBuisinessentityid(Integer buisinessentityid) {
+		this.buisinessentityid = buisinessentityid;
+	}
 
 	public Employeedepartmenthistory() {
 	}

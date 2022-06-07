@@ -1,5 +1,7 @@
 package com.sean.taller.services.imp;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,5 +26,10 @@ public class EmployeeServiceImp implements EmployeeService{
 	@Override
 	public Employee save(Employee e) {
 		return er.save(e);
+	}
+
+	@Override
+	public Optional<Employee> findById(Integer id) {
+		return er.findById(id);
 	}
 }

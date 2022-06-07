@@ -1,7 +1,7 @@
 package com.sean.taller;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+
 import java.time.LocalDate;
 
 import org.springframework.boot.SpringApplication;
@@ -132,16 +132,16 @@ public class Application {
 		Employee e2 = new Employee();
 		e2.setJobtitle("Pedriatitian");
 		e2.setBusinessentityid(2);
-		es.save(e2);
+		Employee savedEmployee = es.save(e2);
 		
 		EmployeeDepartmentHistoryService emdhs = c.getBean(EmployeeDepartmentHistoryService.class);
 		
 		Employeedepartmenthistory edh = new Employeedepartmenthistory();
-		edh.setEmployee(e2);
+		//edh.setEmployee(e2);
 		edh.setDepartment(d);
 		edh.setModifieddate(LocalDate.now());
 		edh.setEnddate(LocalDate.of(2022, 05, 6));
-		emdhs.save(edh);
+		emdhs.save(edh, savedEmployee.getBusinessentityid());
 	}
 	
 	@Bean
