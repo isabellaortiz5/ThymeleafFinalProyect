@@ -42,6 +42,7 @@ public class Employeedepartmenthistory implements Serializable {
 	private Department department;
 
 	// bi-directional many-to-one association to Employee
+	
 	@ManyToOne
 	@JoinColumn(name = "businessentityid")
 	private Employee employee;

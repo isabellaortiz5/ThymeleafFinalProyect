@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sean.taller.backcontroller.intfcs.EmployeeDepartmentHistoryBackController;
 import com.sean.taller.model.hr.Employeedepartmenthistory;
+import com.sean.taller.model.prod.Productsubcategory;
 import com.sean.taller.services.intfcs.EmployeeDepartmentHistoryService;
 
 @RestController
@@ -48,6 +49,8 @@ public class EmployeeDepartmentHistoryBackControllerImp implements EmployeeDepar
 	@Override
 	@GetMapping("/")
 	public Iterable<Employeedepartmenthistory> findAll() {
+		Employeedepartmenthistory a = es.findById(1);
+		System.out.println("ON REST CONTROLLER-DAO: " + a.getEmployee());
 		return es.findAll();
 	}
 

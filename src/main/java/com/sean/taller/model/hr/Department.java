@@ -56,6 +56,7 @@ public class Department implements Serializable {
 		return this.departmentid;
 	}
 
+	
 	public List<Employeedepartmenthistory> getEmployeedepartmenthistories() {
 		return this.employeedepartmenthistories;
 	}

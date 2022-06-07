@@ -71,6 +71,7 @@ public class Employee implements Serializable {
 	private List<Employeepayhistory> employeepayhistories;
 
 	// bi-directional many-to-one association to Jobcandidate
+	
 	@OneToMany(mappedBy = "employee")
 	private List<Jobcandidate> jobcandidates;
 

@@ -29,7 +29,6 @@ public class EmployeeDepartmentHistoryController {
 	@Autowired
 	private EmployeeServiceImp esi;
 	
-	@Autowired
 	public EmployeeDepartmentHistoryController(DepartmentDelegate dd, EmployeeDepartmentHistoryDelegate edhd, EmployeeServiceImp esi) {
 		this.dd = dd;
 		this.edhd = edhd;
@@ -73,18 +72,21 @@ public class EmployeeDepartmentHistoryController {
 	}
 
 	@PostMapping("/add")
-	public String addEmployeedepartmenthistoryPost(Model model, @Valid @ModelAttribute Employeedepartmenthistory edh, BindingResult bindingResult) {
+	public String addEmployeedepartmenthistoryPost(Model model, @ModelAttribute Employeedepartmenthistory edh, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {    
-			System.out.println("EDH emp POST MAPPING: " + edh.getEmployee());
+			
 			model.addAttribute("Employeedepartmenthistory", new Employeedepartmenthistory());
 			model.addAttribute("departments", dd.findAll());
 			model.addAttribute("employees", esi.findAll());
+			
 	        return "emp-dept-hist/add";
 	    } else {	
 	    	
-			edhd.save(edh);
-	    	return "redirect:/emp-dept-hist";
+				    	
 	    }
+		edhd.save(edh);
+		System.out.println("EDH emp POST MAPPING: " + edh.getEmployee());
+		return "redirect:/emp-dept-hist";
 		
 	}
 	
