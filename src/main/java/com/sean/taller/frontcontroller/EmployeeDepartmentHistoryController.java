@@ -22,8 +22,11 @@ import com.sean.taller.services.imp.EmployeeServiceImp;
 @Controller
 @RequestMapping("emp-dept-hist")
 public class EmployeeDepartmentHistoryController {
+	@Autowired
 	private DepartmentDelegate dd;
+	@Autowired
 	private EmployeeDepartmentHistoryDelegate edhd;
+	@Autowired
 	private EmployeeServiceImp esi;
 	
 	@Autowired

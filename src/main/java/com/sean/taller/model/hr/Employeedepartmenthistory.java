@@ -2,7 +2,6 @@ package com.sean.taller.model.hr;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,8 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -31,8 +28,8 @@ public class Employeedepartmenthistory implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EMPLOYEEDEPARTMENTHISTORY_ID_GENERATOR")
 	private Integer id;
 
-	@Temporal(TemporalType.DATE)
-	private Date enddate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate enddate;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate modifieddate;
@@ -63,7 +60,7 @@ public class Employeedepartmenthistory implements Serializable {
 		return this.employee;
 	}
 
-	public Date getEnddate() {
+	public LocalDate getEnddate() {
 		return this.enddate;
 	}
 
@@ -87,7 +84,7 @@ public class Employeedepartmenthistory implements Serializable {
 		this.employee = employee;
 	}
 
-	public void setEnddate(Date enddate) {
+	public void setEnddate(LocalDate enddate) {
 		this.enddate = enddate;
 	}
 

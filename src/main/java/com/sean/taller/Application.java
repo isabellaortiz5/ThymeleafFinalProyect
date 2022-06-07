@@ -140,7 +140,7 @@ public class Application {
 		edh.setEmployee(e2);
 		edh.setDepartment(d);
 		edh.setModifieddate(LocalDate.now());
-		edh.setEnddate(Date.valueOf(LocalDate.now()));
+		edh.setEnddate(LocalDate.of(2022, 05, 6));
 		emdhs.save(edh);
 	}
 	
