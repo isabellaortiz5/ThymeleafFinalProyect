@@ -5,7 +5,7 @@
 <meta name="viewport"
 	content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>Product vendor</title>
+<title>Department</title>
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
 	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
@@ -18,10 +18,10 @@
 </head>
 <body>
 	<div class="container my-1">
-	<h2 class="mb-5">Add Product SubCategory</h2>
+	<h2 class="mb-5">Add Department</h2>
 		<div class="row">
 			<div class="col-md-5">
-				<form action="#" th:object="${productsubcateg}" th:action="@{/prod-sub-categ/add}" method="post">
+				<form action="#" th:object="${department}" th:action="@{/dept/add}" method="post">
 					<div class="form-group col-md-6">
         				<label for="visible" class="col-form-label">Modified Date</label>
                 		<input type="date" class="form-control" id="modifieddate" th:field="*{modifieddate}"/>
@@ -33,19 +33,9 @@
                			<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
 					</div>
 					<div class="form-group col-md-6">
-        				<label for="visible" class="col-form-label">Rowgu Id</label>
-                		<input type="number" min="0" class="form-control" id="rowguid" value="0" th:field="*{rowguid}"/>
-               			<span th:if="${#fields.hasErrors('rowguid')}" th:errors="*{rowguid}" class="text-danger"></span>
-					</div>
-					<div class="form-group col-md-6">
-						<label for="productcategory" class="col-form-label">Product Category
-							</label> <select th:field="*{productcategory}">
-							<option th:each="pc : ${productcategs}"
-								th:value="${pc.productcategoryid}" class="form-control"
-								th:text="${pc.name}"
-								th:selected="${productsubcateg.productcategory=pc}"></option>
-						</select> <span th:if="${#fields.hasErrors('productcategory')}"
-							th:errors="*{productcategory}" class="text-danger"></span>
+        				<label for="visible" class="col-form-label">Group name</label>
+                		<input type="text" class="form-control" id="groupname" placeholder="groupname" th:field="*{groupname}"/>
+               			<span th:if="${#fields.hasErrors('groupname')}" th:errors="*{groupname}" class="text-danger"></span>
 					</div>
 					
 					<div class="col-md-6 mt-3">
@@ -59,7 +49,7 @@
 				
 			</div>
       	</div>
-      	<a href="/prod-categ/"><i class="fas fa-home ml-2"></i> Go to product category index</a>
+      	<a href="/dept/"><i class="fas fa-home ml-2"></i> Go to Department index</a>
     </div>
 </body>
 </html>
