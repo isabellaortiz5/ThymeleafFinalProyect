@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.sean.taller.businessdelegate.intfcs.DepartmentDelegate;
 import com.sean.taller.businessdelegate.intfcs.EmployeeDepartmentHistoryDelegate;
-import com.sean.taller.model.hr.Department;
 import com.sean.taller.model.hr.Employeedepartmenthistory;
 import com.sean.taller.services.imp.EmployeeServiceImp;
 
@@ -97,10 +96,11 @@ public class EmployeeDepartmentHistoryController {
 	
 	@GetMapping("/{id}")
 	public String getEmployeedepartmenthistory(Model model,@PathVariable("id") Integer id) {
-		Department d = dd.findById(id);
-		if (d == null)
+		Employeedepartmenthistory dedh = edhd.findById(id);
+		if (dedh == null)
 			throw new IllegalArgumentException("Invalid emp dept hst Id:" + id);
-		model.addAttribute("department", d);
+		
+		model.addAttribute("Employeedepartmenthistory", dedh);
 		return "emp-dept-hist/information";
 	}
 }
