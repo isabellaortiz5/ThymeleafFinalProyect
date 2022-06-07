@@ -1,7 +1,7 @@
 package com.sean.taller.model.hr;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -11,6 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * The persistent class for the department database table.
@@ -28,11 +32,13 @@ public class Department implements Serializable {
 
 	private String groupname;
 
-	private Timestamp modifieddate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate modifieddate;
 
 	private String name;
 
 	// bi-directional many-to-one association to Employeedepartmenthistory
+	@JsonIgnore
 	@OneToMany(mappedBy = "department")
 	private List<Employeedepartmenthistory> employeedepartmenthistories;
 
@@ -58,7 +64,7 @@ public class Department implements Serializable {
 		return this.groupname;
 	}
 
-	public Timestamp getModifieddate() {
+	public LocalDate getModifieddate() {
 		return this.modifieddate;
 	}
 
@@ -86,7 +92,7 @@ public class Department implements Serializable {
 		this.groupname = groupname;
 	}
 
-	public void setModifieddate(Timestamp modifieddate) {
+	public void setModifieddate(LocalDate modifieddate) {
 		this.modifieddate = modifieddate;
 	}
 
