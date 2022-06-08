@@ -18,7 +18,7 @@
 </head>
 <body>
 	<div class="container my-1">
-		<h2 class="mb-5">Add Employee Department History Controller</h2>
+		<h2 class="mb-5">Add Employee Department History</h2>
 		<div class="row">
 			<div class="col-md-5">
 				<form action="#" th:object="${Employeedepartmenthistory}"
@@ -55,17 +55,7 @@
 						</select> <span th:if="${#fields.hasErrors('department')}"
 							th:errors="*{department}" class="text-danger"></span>
 					</div>
-					<div class="form-group col-md-6">
-					
-						<label for="employee" class="col-form-label">Employee</label> <select class="form-control-range"
-							th:field="*{buisinessentityid}">
-					
-							<option th:each="e : ${employee}" th:value="${e.buisinessentityid}" class="form-control" th:text="${e.jobtitle}"
-								th:selected="${Employeedepartmenthistory.employee=e}"></option>
-					
-						</select>
-					
-					</div>
+
 
 					<div class="col-md-6 mt-3">
 						<input type="submit" name="action" class="btn btn-primary" value="Add"/>

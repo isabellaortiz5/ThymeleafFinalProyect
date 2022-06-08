@@ -34,7 +34,10 @@
     <div>
         <h5>Group Name</h5>
         <p th:text="${department.groupname}"></p>
-    </div>
+	</div>
+	<ul th:each="d : ${departmenhistories}">
+		<li th:text="${departmenthistory}"></li>
+	</ul>
 
     <p>
         <a th:href="@{/dept/edit/{id}(id=${department.departmentid})}" class="btn btn-primary">Edit</a>

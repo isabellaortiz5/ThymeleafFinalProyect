@@ -52,8 +52,9 @@ public class EmployeeDepartmentHistoryController {
 		if (edh == null)
 			throw new IllegalArgumentException("Invalid emp dept hst Id:" + id);
 		
-		model.addAttribute("empDeptHists", edh);
-		model.addAttribute("department", dd.findAll());
+		model.addAttribute("Employeedepartmenthistory", edh);
+		model.addAttribute("departments", dd.findAll());
+		model.addAttribute("employees", esi.findAll());
 		return "emp-dept-hist/edit";
 	}
 

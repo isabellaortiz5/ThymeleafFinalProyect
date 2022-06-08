@@ -25,7 +25,7 @@ public class EmployeeDepartmentHistoryBackControllerImp implements EmployeeDepar
 	@Override
 	@PostMapping("/")
 	public Employeedepartmenthistory save(@RequestBody Employeedepartmenthistory e) {
-		return es.save(e);
+		return es.save(e, e.getEmployee().getBusinessentityid());
 	}
 
 	@Override
