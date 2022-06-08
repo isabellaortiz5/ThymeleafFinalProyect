@@ -100,11 +100,18 @@ class ProductSubCategoryDaoTest {
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public void findAllTest() {
 		
+		setUpSave();
+		
 		pscd.save(s);
-	
+		
+		Productcategory pc2 = new Productcategory();
+		pc2.setName("test");
+		pcd.save(pc2);
+		
 		Productsubcategory s1 = new Productsubcategory();
-		s.setName("Fernando");
-		s.setRowguid(6);
+		s1.setName("Fernando");
+		s1.setRowguid(6);
+		s1.setProductcategory(pc2);
 		
 		pscd.save(s1);
 		assertEquals(2, pscd.findAll().size());
