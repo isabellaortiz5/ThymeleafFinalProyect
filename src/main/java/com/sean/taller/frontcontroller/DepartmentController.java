@@ -1,5 +1,8 @@
 package com.sean.taller.frontcontroller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.sean.taller.businessdelegate.intfcs.DepartmentDelegate;
 import com.sean.taller.businessdelegate.intfcs.EmployeeDepartmentHistoryDelegate;
 import com.sean.taller.model.hr.Department;
+import com.sean.taller.model.hr.Employeedepartmenthistory;
 
 @Controller
 @RequestMapping("dept")
@@ -86,9 +90,19 @@ public class DepartmentController {
 	@GetMapping("/{id}")
 	public String getDepartment(Model model,@PathVariable("id") Integer id) {
 		Department d = dd.findById(id);
+		List<Employeedepartmenthistory> edh = edhd.findAll();
+		ArrayList<Employeedepartmenthistory> linkededhs = new ArrayList<>();
+		for (Employeedepartmenthistory e : edh) {
+			if(e.getDepartment().getDepartmentid() == id){
+				linkededhs.add(e);
+			}
+			
+		}
+
 		if (d == null)
 			throw new IllegalArgumentException("Invalid dept Id:" + id);
 		model.addAttribute("department", d);
+		model.addAttribute("depthistories", linkededhs);
 		return "dept/information";
 	}
 	
