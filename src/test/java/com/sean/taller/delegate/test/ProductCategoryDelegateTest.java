@@ -136,9 +136,5 @@ class ProductCategoryDelegateTest {
         server.verify();
 	}
 	
-	@Test
-	void findAllProductCategory() {
-		
-	}
 
 }

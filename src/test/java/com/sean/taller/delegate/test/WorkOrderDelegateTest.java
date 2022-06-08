@@ -142,9 +142,5 @@ class WorkOrderDelegateTest {
         server.verify();
 	}
 	
-	@Test
-	void findAllProductCategory() {
-		
-	}
 
 }
